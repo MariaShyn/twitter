@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="row"><br/><br/>
+                <div class="col-sm-offset-3 col-sm-8">
+                    <h1 class="color-white bold-style black-shadow">Welcome to Twitter.</h1>
+                </div><br/>
+                <div class="col-sm-offset-3 col-sm-8">
+                    <h4 class="color-white bold-style black-shadow">Connect with your friends - and other fascinating people. Get in-the-moment updates on the things that interest you. And watch events unfold, in real time, from every angle.</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5"><br/><br/>
+            <div class="container col-md-8 forforms"><br/>
+                <form id="signin-form" ng-submit="signIn()" class="form-signin">
+                    <div class="form-group">
+                        <input ng-model="auth.email" type="email" placeholder="Email address" required="" autofocus="" class="form-control"/>
+                    </div>
+                    <div display="block" class="form-group">
+                        <input ng-model="auth.password" type="password" placeholder="Password" required="" style="width : 60%;" class="form-control col-sm-6"/>
+                        <button id="signInBut" type="submit" class="btn btn-lg btn-primary btn-block">Sign in</button>
+                    </div>
+                    <!--div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="remember-me"/> Remember me
+                            </label>
+                        </div>
+                    </div-->
+                </form>
+            </div>
+            <div class="container col-md-8 forforms"><br/>
+                <form id="signup-form" class="form-signup" ng-submit="signUp()">
+                    <div class="form-group">
+                        <h4>New to Twitter? Sign up</h4>
+                    </div>
+                    <div class="form-group">
+                        <input ng-model="newUser.fullname" id="signUpFullName" type="text" placeholder="Full name" required="" autofocus="" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <input ng-model="newUser.email" id="signUpEmail" type="email" placeholder="Email address" required="" autofocus="" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <input ng-model="newUser.password" id="signUpPassword" type="password" placeholder="Password" required="" autofocus="" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <button id="signUpBut" type="submit" style="width: 60%;position:relative;float:right" class="btn btn-lg btn-primary btn-block">Sign up for Twitter</button>
+                    </div><br/><br/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

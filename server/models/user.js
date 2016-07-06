@@ -26,7 +26,7 @@ var schema = new Schema({
         type: Date,
         default : Date.now
     },
-    twits: [String]
+    twits: []
 });
 
 schema.methods.encryptPassword = function(password){
@@ -46,7 +46,7 @@ schema.methods.checkPassword = function(password){
 };
 
 schema.methods.addNewTwit = function(newOne){
-    this.twits.push(newOne);
+    this.twits.push({"text": newOne.text, "date": newOne.date});
     this.save();
 }
 

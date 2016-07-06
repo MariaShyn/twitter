@@ -1,90 +1,49 @@
-extends layouts/mainLayout
-block title
-    title Welcome
-block content
-    .container
-        .row
-            .col-md-7
-                .row
-                    br
-                    br
-                    .col-sm-offset-3.col-sm-8
-                        h1.color-white.bold-style.black-shadow Welcome to Twitter.
-                    br
-                    .col-sm-offset-3.col-sm-8
-                        h4.color-white.bold-style.black-shadow Connect with your friends - and other fascinating people. Get in-the-moment updates on the things that interest you. And watch events unfold, in real time, from every angle.
-            .col-md-5
-                br
-                br
-                .container.col-md-8.forforms
-                    br
-                    form.form-signin(id="signin-form")
-                        .form-group
-                            input.form-control(id="signInEmail", type='email', placeholder='Email address', required='', autofocus='')
-                        .form-group(display = 'block')
-                            input.form-control.col-sm-6(id="signInPassword", type='password', placeholder='Password', required='', style="width : 60%;")
-                            button.btn.btn-lg.btn-primary.btn-block#signInBut(type='submit') Sign in
-                        .form-group
-                            .checkbox
-                              label
-                                input(type='checkbox', value='remember-me')
-                                |  Remember me
+doctype html
+html(ng-app='twitter')
+    head
+        link(rel='stylesheet', href='vendor/bower_components/bootstrap/dist/css/bootstrap.min.css')
+        title TWITTER
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        meta(http-equiv='content-type', content='text/html; charset=UTF-8')
+    body(ng-cloak='')
+        nav.navbar.navbar-default.navbar-static-top
+            .container
+                .navbar-header
+                    button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+                        span.sr-only Toggle navigation
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href='#')
+                        img#icon(alt='Brand', scr='/images/icon.png')
+                #navbar.navbar-collapse.collapse
+                    ul.nav.navbar-nav
+                        if(!user)
+                            li
+                                a(ui-sref='#') Home
+                        else
+                            li
+                                a(ui-sref='profile') Profile
+                        li
+                            a(ui-sref='about') About
+                        li
+                            a(ui-sref='contact') Contact
+                    if(user)
+                        ul.nav.navbar-nav.navbar-right
+                            li
+                               a(href = '/', onclick = "$(\'<form method=post action=/logout>').submit();return false;") Logout
 
-                .container.col-md-8.forforms
-                    br
-                    form.form-signup(id="signup-form")
-                        .form-group
-                            h4 New to Twitter? Sign up
-                        .form-group
-                            input.form-control(id="signUpFullName", type='text', placeholder='Full name', required='', autofocus='')
-                        .form-group
-                            input.form-control(id="signUpEmail",type='email', placeholder='Email address', required='', autofocus='')
-                        .form-group
-                            input.form-control(id="signUpPassword", type='password', placeholder='Password', required='', autofocus='')
-                        .form-group
-                            button.btn.btn-lg.btn-primary.btn-block#signUpBut(type='submit' style="width: 60%;position:relative;float:right") Sign up for Twitter
-                        br
-                        br
-                script.
-                    $('#signin-form').on('submit', function() {
-                        $.ajax({
-                            url: "/",
-                            method: "POST",
-                            data: {
-                                email : $('#signInEmail').val(),
-                                password : $('#signInPassword').val()
-                            },
-                            statusCode: {
-                                200: function() {
-                                    window.location.href = "/profile";
-                                },
-                                403: function(jqXHR) {
-                                    window.location.href = "/error?message=incorrect password or login";
-                                },
-                                404: function() {
-                                    window.location.href = "/error?message=user was not found";
-                                }
-                            }
-                        });
-                        return false;
-                    });
-                    $('#signup-form').on('submit', function() {
-                        $.ajax({
-                            url: "/signup",
-                            method: "POST",
-                            data: {
-                                fullname : $('#signUpFullName').val(),
-                                email : $('#signUpEmail').val(),
-                                password : $('#signUpPassword').val()
-                            },
-                            statusCode: {
-                                200: function() {
-                                    window.location.href = "/profile";
-                                },
-                                403: function(jqXHR) {
-                                    window.location.href = "/error?message=user with this username is already authorized";
-                                }
-                            }
-                        });
-                        return false;
-                    });
+        .container-fluid
+            ui-view
+    // VENDOR
+    script(src='vendor/bower_components/angular/angular.min.js')
+    script(src='vendor/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js')
+    script(src='vendor/bower_components/angular-ui-router/release/angular-ui-router.min.js')
+    script(src='vendor/bower_components/jquery/dist/jquery.min.js')
+    script(src='vendor/bower_components/bootstrap/dist/js/bootstrap.min.js')
+    // APP
+    script(src='js/app.js')
+    script(src='js/aboutCtrl.js')
+    script(src='js/contactCtrl.js')
+    script(src='js/homeCtrl.js')
+    script(src='js/profileCtrl.js')

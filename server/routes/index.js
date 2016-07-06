@@ -2,34 +2,32 @@ var User = require('../models/user').User;
 var HttpError = require('../libs/HttpError').HttpError;
 var log = require("../libs/log");
 var checkAuth = require("../libs/checkAuth");
-
+var somefunc = require("./funcforpages");
 
 module.exports = function(app) {
 
-  app.get('/', require("./mainpage").get);
-  app.post('/', require("./mainpage").login);
-  app.post('/signup', require("./mainpage").singup);
+  app.get('/', function(req,res){
+    res.render("index");
+  });
+
+  app.post('/', somefunc.login);
+  app.post('/signup', somefunc.singup);
   app.post('/logout', function(req,res){
     req.session.destroy();
     res.redirect('/');
   });
 
   app.post('/newtwit', function(req,res){
-    console.log(req.body.newtwit);
-    req.user.addNewTwit(req.body.newtwit);
-    console.log("I'm here");
+    req.user.addNewTwit(req.body);
     res.end();
   });
 
   app.get('/profile', checkAuth, function(req,res,next){
     User.findById(req.session.user, function(err, user){
       if(err) return err;
-      res.render('profile');
+      res.send(user);
     })
-
   });
-
-
 
   app.get('/error', function(req, res, next) {
     var error = {
