@@ -1,16 +1,16 @@
-var express = require('express');
-
-var path = require('path');
+var express = require('express'),
+    path = require('path'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    passport = require('passport');
 //var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var config = require('./server/config');
-var mongoose = require('./server/libs/mongoose.js');
 
+require('./server/models/mongoose');
+require('./server/config/password');
 
-var app = express();
+var routesApi = require('./server/routes'),
+    app = express();
 
 app.set('views', path.join(__dirname, 'server', 'views'));
 app.set('view engine', 'jade');
@@ -21,20 +21,52 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-var MongoStore = require('connect-mongo')(session);
+app.use(passport.initialize());
+
+app.use(routesApi)
+
+app.use(function(req, res) {
+    res.sendFile(path.join(__dirname, 'client', 'index.html'));
+});
 
 
-app.use(session({
-  secret : config.get('session:secret'),
-  key : config.get('session:key'),
-  cookie : config.get('session:cookie'),
-  store: new MongoStore({mongooseConnection: mongoose.connection}),
-  resave: true,
-  saveUninitialized: true
-}));
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
 
-app.use(require('./server/libs/loadUser'));
-require("./server/routes")(app);
+// error handlers
 
+// [SH] Catch unauthorised errors
+app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        res.status(401);
+        res.json({"message" : err.name + ": " + err.message});
+    }
+});
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
+    });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
+});
 
 module.exports = app;
